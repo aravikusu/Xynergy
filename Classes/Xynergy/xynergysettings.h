@@ -3,15 +3,17 @@
 
 #include <string>
 #include <Utils/enums.h>
+#include <type_traits>
 
 /// <summary>
-/// XynergySettings is here to make it easy to save and fetch settings.
+/// XynergySettings is meant to handle the game itself, such as window mode and size, not user data.
 /// </summary>
 class XynergySettings {
 public:
 	XynergySettings();
 	~XynergySettings();
-	bool saveSetting(std::string);
+	template<typename T>
+	bool saveSetting(Xynergy_SettingsType, T);
 	std::string fetchSetting(Xynergy_SettingsType);
 private:
 	void setDefault();
