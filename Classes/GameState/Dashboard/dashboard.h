@@ -5,18 +5,19 @@
 #include <list>
 #include <SDL.h>
 #include <Classes/App/app.h>
+#include <Classes/Texture/texture.h>
 
 
 class Dashboard {
 public:
-	Dashboard();
-	~Dashboard();
-	SDL_Texture* wallpaper;
+	Dashboard setupDashboard();
+	Texture wallpaper;
 	std::list<App> appList;
 	Xynergy_TaskbarMode taskbarMode;
 	Xynergy_TaskBarOrientation taskbarOrientation;
 private:
-
+	std::list<App> appListSetup();
+	void taskbarSetup();
 };
 
 #endif
