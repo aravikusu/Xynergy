@@ -1,18 +1,43 @@
 #include "xynergy.h"
 
+/// <summary>
+/// Initializes SDL and all of its components.
+/// </summary>
+/// <returns></returns>
 bool Xynergy::init() {
 	bool success = true;
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-		printf("SDL_Init failure: %s\n", SDL_GetError());
+		printf("Xynergy::init: SDL_Init failure: %s\n", SDL_GetError());
 		success = false;
 	}
+	else {
 
-	int width = std::stoi(settings.fetchSetting(Xynergy_SettingsType::XYNERGY_WIDTH));
-	int height = std::stoi(settings.fetchSetting(Xynergy_SettingsType::XYNERGY_HEIGHT));
-	if (SDL_CreateWindowAndRenderer(width, height, 0, &window, &renderer) < 0) {
-		printf("SDL_CreateWindowAndRenderer failure: %s\n", SDL_GetError());
-		success = false;
+		if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1")) {
+			printf("Xynergy::init: Warning! Linear texture filtering could not be enabled!");
+		}
+
+		int width = std::stoi(settings.fetchSetting(Xynergy_SettingsType::XYNERGY_WIDTH));
+		int height = std::stoi(settings.fetchSetting(Xynergy_SettingsType::XYNERGY_HEIGHT));
+		if (SDL_CreateWindowAndRenderer(width, height, SDL_RENDERER_ACCELERATED, &window, &renderer) < 0) {
+			printf("Xynergy::init: SDL_CreateWindowAndRenderer failure: %s\n", SDL_GetError());
+			success = false;
+		}
+		else {
+			SDL_SetWindowTitle(window, windowName);
+
+			int imgFlags = IMG_INIT_JPG | IMG_INIT_PNG;
+			if (!(IMG_Init(imgFlags) & imgFlags)) {
+				printf("Xynergy::init: IMG_init failure: %s\n", IMG_GetError());
+				success = false;
+			}
+
+			if (TTF_Init() == -1) {
+				printf("Xynergy::init: TTF_Init failure: %s\n", TTF_GetError());
+				success = false;
+			}
+
+		}
 	}
 
 	return success;
@@ -84,10 +109,9 @@ void Xynergy::update() {
 
 Xynergy::Xynergy() {
 	if (!init()) {
-		printf("Initialization failure! Game over!\n\nCheck the console for further errors that lead here.");
+		printf("Initialization failure! \n\nCheck the console for further errors that lead here.");
 	}
 	else {
-		SDL_SetWindowTitle(window, "Xynergy");
 		running = true;
 		currentState = Xynergy_GameState::XYNERGY_BOOT;
 		loop();
@@ -98,4 +122,6 @@ Xynergy::~Xynergy() {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
+	IMG_Quit();
+	TTF_Quit();
 }
