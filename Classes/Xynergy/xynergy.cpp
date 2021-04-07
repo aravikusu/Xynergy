@@ -62,22 +62,26 @@ void Xynergy::loop() {
 /// <para>It breaks off depending on which state the game is in. </para>
 /// </summary>
 void Xynergy::render() {
+	SDL_RenderClear(renderer);
+
 	switch (currentState) {
 	case Xynergy_GameState::XYNERGY_BOOT:
 		break;
 	case Xynergy_GameState::XYNERGY_LOGIN:
 		break;
 	case Xynergy_GameState::XYNERGY_DASHBOARD:
+		drawDashboard();
 		break;
 	case Xynergy_GameState::XYNERGY_INITSETUP:
 		break;
 	}
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+
+	/*SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 	SDL_Rect rect{};
 	rect.x = rect.y = 0;
 	rect.w = 1280;
 	rect.h = 720;
-	SDL_RenderFillRect(renderer, &rect);
+	SDL_RenderFillRect(renderer, &rect);*/
 
 	frameCount++;
 	timerFPS = SDL_GetTicks() - lastFrame;
@@ -86,6 +90,11 @@ void Xynergy::render() {
 	}
 
 	SDL_RenderPresent(renderer);
+}
+
+void Xynergy::drawDashboard() {
+	Dashboard dash(renderer);
+	dash.renderDashboard(renderer);
 }
 
 void Xynergy::input() {
@@ -113,7 +122,7 @@ Xynergy::Xynergy() {
 	}
 	else {
 		running = true;
-		currentState = Xynergy_GameState::XYNERGY_BOOT;
+		currentState = Xynergy_GameState::XYNERGY_DASHBOARD;
 		loop();
 	}
 }

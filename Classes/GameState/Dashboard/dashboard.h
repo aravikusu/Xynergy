@@ -6,18 +6,21 @@
 #include <SDL.h>
 #include <Classes/App/app.h>
 #include <Classes/Texture/texture.h>
+#include <filesystem>
 
 
 class Dashboard {
 public:
-	Dashboard setupDashboard();
-	Texture wallpaper;
-	std::list<App> appList;
-	Xynergy_TaskbarMode taskbarMode;
-	Xynergy_TaskBarOrientation taskbarOrientation;
+	Dashboard(SDL_Renderer* ren);
+	~Dashboard();
+	void renderDashboard(SDL_Renderer* ren);
 private:
-	std::list<App> appListSetup();
+	Texture wallpaper;
+	Texture taskbar;
+	std::list<App> appList;
+	void appListSetup();
 	void taskbarSetup();
+	void wallpaperSetup(SDL_Renderer* ren);
 };
 
 #endif

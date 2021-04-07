@@ -6,6 +6,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <Classes/Xynergy/xynergysettings.h>
+#include <Classes/GameState/Dashboard/dashboard.h>
 #include <Utils/enums.h>
 
 /// <summary> 
@@ -25,7 +26,7 @@ public:
 	void input();
 	void renderBoot();
 	void renderLogin();
-	void renderDashboard();
+	void drawDashboard();
 	void renderSetup();
 private:
 	const char* windowName = "Xynergy";
