@@ -44,6 +44,14 @@ enum class Xynergy_AppType {
 };
 
 /// <summary>
+/// Changes the mode of the wallpaper. XYNERGY_WALLPAPER_STRETCH is default.
+/// </summary>
+enum class Xynergy_WallpaperMode {
+	XYNERGY_WALLPAPER_STRETCH = 0,
+	XYNERGY_WALLPAPER_TILE = 1
+};
+
+/// <summary>
 /// The mode of the taskbar in the Dashboard state.
 /// </summary>
 /// <param name="XYNERGY_TASKBARWIN">Makes the taskbar look and act like the one on Windows.</param>
