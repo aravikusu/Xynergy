@@ -17,6 +17,7 @@ public:
 	~Texture();
 	bool loadFile(std::string path, SDL_Renderer* ren);
 	bool loadText(std::string text, SDL_Color textColor, TTF_Font* font, int fontSize, SDL_Renderer* ren);
+	void render(int x, int y, SDL_Renderer* ren, SDL_Rect* clip = NULL);
 	void kill();
 	void setColor(Uint8 red, Uint8 green, Uint8 blue);
 	void setBlendMode(SDL_BlendMode blend);
