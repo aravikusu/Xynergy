@@ -39,8 +39,9 @@ enum class Xynergy_GameState {
 /// </summary>
 /// <param name="far too many. Check the list."></param>
 enum class Xynergy_AppType {
-	XYNERGY_IMAGE = 0,
-	XYNERGY_TEXT = 1
+	XYNERGY_APP_EMPTY = 0,
+	XYNERGY_APP_IMAGE = 1,
+	XYNERGY_APP_TEXT = 2
 };
 
 /// <summary>
