@@ -40,7 +40,7 @@ bool XynergySettings::saveSetting(Xynergy_SettingsType type, T value) {
 
 	}
 	else {
-		printf("XynergySettings: Error! Setting not saved. saveSetting() can only take int, string, or enum class Xynergy_SettingsType.");
+		printf("XynergySettings: Error! Setting not saved. saveSetting() can only take int, string, or enum class Xynergy_SettingsType.\n");
 		return false;
 	}
 	return true;
@@ -50,7 +50,7 @@ bool XynergySettings::saveSetting(Xynergy_SettingsType type, T value) {
 /// Runs if settings.ini wasn't found. Simply creates it and defaults settings.
 /// </summary>
 void XynergySettings::setDefault() {
-	printf("XynergySettings: Warning! settings.ini was not found! Creating and defaulting settings.");
+	printf("XynergySettings: Warning! settings.ini was not found! Creating and defaulting settings.\n");
 	debug = false;
 	width = 1280;
 	height = 720;
