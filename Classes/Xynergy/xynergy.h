@@ -19,7 +19,14 @@ public:
 	Xynergy();
 	~Xynergy();
 	XynergySettings settings;
+
+	// Initializes SDL and all of its components.
 	bool init();
+
+	void changeGameState(Xynergy_GameState state);
+
+	// The main render function for the game loop.
+	// GameState determines where we go.
 	void loop();
 	void update();
 	void render();
@@ -35,6 +42,7 @@ private:
 	bool running;
 	int frameCount, timerFPS, lastFrame;
 	Xynergy_GameState currentState;
+	Dashboard dashboard;
 };
 
 #endif 

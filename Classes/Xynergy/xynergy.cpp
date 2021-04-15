@@ -1,9 +1,5 @@
 #include "xynergy.h"
 
-/// <summary>
-/// Initializes SDL and all of its components.
-/// </summary>
-/// <returns></returns>
 bool Xynergy::init() {
 	bool success = true;
 
@@ -43,6 +39,23 @@ bool Xynergy::init() {
 	return success;
 }
 
+void Xynergy::changeGameState(Xynergy_GameState state) {
+	currentState = state;
+
+	switch (state)
+	{
+	case Xynergy_GameState::XYNERGY_BOOT:
+		break;
+	case Xynergy_GameState::XYNERGY_LOGIN:
+		break;
+	case Xynergy_GameState::XYNERGY_DASHBOARD:
+		dashboard.setupDashboard(renderer);
+		break;
+	case Xynergy_GameState::XYNERGY_INITSETUP:
+		break;
+	}
+}
+
 void Xynergy::loop() {
 	while (running) {
 		lastFrame = SDL_GetTicks();
@@ -76,13 +89,6 @@ void Xynergy::render() {
 		break;
 	}
 
-	/*SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-	SDL_Rect rect{};
-	rect.x = rect.y = 0;
-	rect.w = 1280;
-	rect.h = 720;
-	SDL_RenderFillRect(renderer, &rect);*/
-
 	frameCount++;
 	timerFPS = SDL_GetTicks() - lastFrame;
 	if (timerFPS < (1000 / 60)) {
@@ -93,8 +99,10 @@ void Xynergy::render() {
 }
 
 void Xynergy::drawDashboard() {
-	Dashboard dash(renderer);
-	dash.renderDashboard(renderer);
+	int width = std::stoi(settings.fetchSetting(Xynergy_SettingsType::XYNERGY_WIDTH));
+	int height = std::stoi(settings.fetchSetting(Xynergy_SettingsType::XYNERGY_HEIGHT));
+
+	dashboard.renderDashboard(renderer, width, height);
 }
 
 void Xynergy::input() {
@@ -118,16 +126,17 @@ void Xynergy::update() {
 
 Xynergy::Xynergy() {
 	if (!init()) {
-		printf("Initialization failure! \n\nCheck the console for further errors that lead here.");
+		printf("Initialization failure! \n\nCheck the console for further errors that lead here.\n");
 	}
 	else {
 		running = true;
-		currentState = Xynergy_GameState::XYNERGY_DASHBOARD;
+		changeGameState(Xynergy_GameState::XYNERGY_DASHBOARD);
 		loop();
 	}
 }
 
 Xynergy::~Xynergy() {
+	printf("Xynergy is shutting down.\nIt's now save to turn off your computer.\n");
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();

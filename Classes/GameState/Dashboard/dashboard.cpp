@@ -1,48 +1,49 @@
 #include "dashboard.h";
 
-/// <summary>
-///  Here's where you put which apps you want to have.
-/// </summary>
-void Dashboard::appListSetup() {
+void Dashboard::appListSetup(SDL_Renderer* ren) {
+	SDL_Color color = { 0, 0, 0 };
+	TTF_Font* font = TTF_OpenFont("Materials/fonts/Roboto-Regular.ttf", 18);
+	App testApp;
+	apps.push_back(testApp);
+	apps[0].setupApp("iconerror.png", "Test App", color, font, ren);
+	apps[0].setCoordinates(15, 10);
 
+	/*App testApp2 = { "iconerror.png", "Test App", color, font, ren };
+	testApp2.setCoordinates(50, 0);
+	apps.push_back(testApp2);*/
+
+	TTF_CloseFont(font);
 }
 
-/// <summary>
-/// Sets up all the taskbar textures and components.
-/// <para>If no XynergyUserSettings can be found it uses defaults.</para>
-/// </summary>
-void Dashboard::taskbarSetup() {
-
-}
-
-/// <summary>
-/// Sets up all the wallpaper for the Dashboard.
-/// <para>If no XynergyUserSettings can be found it uses defaults.</para>
-/// </summary>
-void Dashboard::wallpaperSetup(SDL_Renderer* ren) {
-	// Implement UserSettings...
-	wallpaper.loadFile("Materials/textures/wallpapers/xynergy-b.png", ren);
-}
-
-/// <summary>
-/// The main Dashboard rendering function. It does a lot.
-/// </summary>
-void Dashboard::renderDashboard(SDL_Renderer* ren) {
+void Dashboard::renderDashboard(SDL_Renderer* ren, int width, int height) {
 	// First we render the wallpaper since it goes at the very back.
 	wallpaper.render(0, 0, ren);
+	// Loop through and render the apps we created in appListSetup().
+	/*for (auto it = begin(appList); it != end(appList); ++it) {
+		it->render(ren);
+	}*/
+	for (int i = 0; i < apps.size(); i++) {
+		apps[i].render(ren);
+	}
+
+	//Lastly we render the taskbar because we want it to have priority.
+	taskbar.renderTaskbar(ren, width, height);
 }
 
-/// <summary>
-/// The entire Dashboard is generated in its Constructor.
-/// </summary>
-/// <param name="taskbarMode"></param>
-/// <param name="taskbarOrientation"></param>
-Dashboard::Dashboard(SDL_Renderer* ren) {
+void Dashboard::setupDashboard(SDL_Renderer* ren) {
+	printf("Dashboard is being set up.\n");
+	wallpaper.loadFile("Materials/textures/wallpapers/xynergy-b.png", ren);
+	taskbar.setupTaskbar(ren);
+	appListSetup(ren);
+}
 
-	wallpaperSetup(ren);
+// Go on user settings eventually...
+Dashboard::Dashboard() {
+
 }
 
 Dashboard::~Dashboard() {
+	printf("Dashboard is being killed!\n");
 	wallpaper.kill();
-	appList.clear();
+	apps.clear();
 }
