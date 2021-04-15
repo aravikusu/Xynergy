@@ -1,11 +1,5 @@
 #include "texture.h"
 
-/// <summary>
-/// Takes an image and creates a texture from it.
-/// </summary>
-/// <param name="path">Path to the file.</param>
-/// <param name="ren">The Xynergy renderer.</param>
-/// <returns>True or false if the texture was successfully created or not.</returns>
 bool Texture::loadFile(std::string path, SDL_Renderer* ren) {
 	kill();
 
@@ -34,15 +28,6 @@ bool Texture::loadFile(std::string path, SDL_Renderer* ren) {
 	return texture != NULL;
 }
 
-/// <summary>
-/// Creates a texture based on the font and text sent in.
-/// </summary>
-/// <param name="text">The text you want to display.</param>
-/// <param name="textColor">An SDL_Color. Make your text beautiful.</param>
-/// <param name="font">The font you wish to use.</param>
-/// <param name="fontSize">Do you prefer it bigger or smaller?</param>
-/// <param name="ren">The Xynergy renderer.</param>
-/// <returns>True or false if the texture was successfully created or not.</returns>
 bool Texture::loadText(std::string text, SDL_Color textColor, TTF_Font* font, int fontSize, SDL_Renderer* ren) {
 	kill();
 
@@ -68,25 +53,14 @@ bool Texture::loadText(std::string text, SDL_Color textColor, TTF_Font* font, in
 	return texture != NULL;
 }
 
-/// <summary>
-/// Give your image a nice tint of color.
-/// </summary>
 void Texture::setColor(Uint8 red, Uint8 green, Uint8 blue) {
 	SDL_SetTextureColorMod(texture, red, blue, green);
 }
 
-/// <summary>
-/// Sets the SDL_BlendMode used when rendering the texture.
-/// </summary>
-/// <param name="blend"></param>
 void Texture::setBlendMode(SDL_BlendMode blend) {
 	SDL_SetTextureBlendMode(texture, blend);
 }
 
-/// <summary>
-/// Do you want it to be transparent? 
-/// </summary>
-/// <param name="alpha"></param>
 void Texture::setAlpha(Uint8 alpha) {
 	SDL_SetTextureAlphaMod(texture, alpha);
 }
@@ -108,6 +82,11 @@ void Texture::render(int x, int y, SDL_Renderer* ren, SDL_Rect* clip) {
 	}
 
 	SDL_RenderCopy(ren, texture, clip, &quad);
+}
+
+void Texture::renderViewport(SDL_Renderer* ren, SDL_Rect* viewport) {
+	SDL_RenderSetViewport(ren, viewport);
+	SDL_RenderCopy(ren, texture, NULL, NULL);
 }
 
 /// <summary>
