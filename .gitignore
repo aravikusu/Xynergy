@@ -379,3 +379,5 @@ MigrationBackup/
 *.exe
 *.out
 *.app
+
+*.ini
