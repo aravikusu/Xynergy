@@ -17,7 +17,8 @@ enum class Xynergy_WindowMode {
 enum class Xynergy_SettingsType {
 	XYNERGY_HEIGHT = 0,
 	XYNERGY_WIDTH = 1,
-	XYNERGY_WINDOWMODE = 2
+	XYNERGY_WINDOWMODE = 2,
+	XYNERGY_DEBUG = 3
 };
 
 /// <summary>

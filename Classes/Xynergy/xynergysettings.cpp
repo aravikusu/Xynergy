@@ -1,33 +1,22 @@
 #include "xynergysettings.h";
 
-/// <summary>
-/// Simply put, it fetches the value of the setting that you requested.
-/// </summary>
-/// <param name="type">The requested setting. Has to be a Xynergy_SettingsType enum.</param>
-/// <returns>Your desired setting.</returns>
-std::string XynergySettings::fetchSetting(Xynergy_SettingsType type) {
-	std::string val;
-
-	switch (type) {
-	case Xynergy_SettingsType::XYNERGY_HEIGHT:
-		val = std::to_string(height);
-		break;
-	case Xynergy_SettingsType::XYNERGY_WIDTH:
-		val = std::to_string(width);
-		break;
-	case Xynergy_SettingsType::XYNERGY_WINDOWMODE:
-		break;
-	}
-
-	return val;
+bool XynergySettings::getDebug() {
+	return debug;
 }
 
-/// <summary>
-/// Saves the value you send in to the SettingsType you chose.
-/// </summary>
-/// <param name="type">The setting you wish to save to.</param>
-/// <param name="value">The value you want to save. Can be anything. I recommend checking the function for its use.</param>
-/// <returns>True if the setting successfully saved, false if not.</returns>
+int XynergySettings::getWidth() {
+	return width;
+}
+
+int XynergySettings::getHeight() {
+	return height;
+}
+
+Xynergy_WindowMode XynergySettings::getWindowMode() {
+	return windowMode;
+}
+
+
 template<typename T>
 bool XynergySettings::saveSetting(Xynergy_SettingsType type, T value) {
 	if constexpr (std::is_same_v<std::decay_t<T>, int>) {
@@ -36,41 +25,111 @@ bool XynergySettings::saveSetting(Xynergy_SettingsType type, T value) {
 	else if constexpr (std::is_same_v<std::decay_t<T>, std::string>) {
 
 	}
-	else if constexpr (std::is_same_v<std::decay_t<T>, Xynergy_SettingsType>) {
+	else if constexpr (std::is_same_v<std::decay_t<T>, Xynergy_WindowMode>) {
 
 	}
 	else {
-		printf("XynergySettings: Error! Setting not saved. saveSetting() can only take int, string, or enum class Xynergy_SettingsType.\n");
+		printf("XynergySettings::saveSetting: %s Setting not saved. saveSetting() can only take int, string, or enum class Xynergy_SettingsType.\n", "\033[0;31mError!\033[0;37m");
 		return false;
 	}
 	return true;
 }
 
+void XynergySettings::setExisting(mINI::INIFile file, mINI::INIStructure ini) {
+	std::istringstream(ini.get("scary_skeletons").get("debug")) >> debug;
+	width = std::stoi(ini.get("main_window").get("width"));
+	height = std::stoi(ini.get("main_window").get("height"));
+
+	int window = std::stoi(ini.get("main_window").get("windowmode"));
+
+	windowMode = static_cast<Xynergy_WindowMode>(window);
+
+	file.~INIFile();
+}
+
 /// <summary>
 /// Runs if settings.ini wasn't found. Simply creates it and defaults settings.
 /// </summary>
-void XynergySettings::setDefault() {
-	printf("XynergySettings: Warning! settings.ini was not found! Creating and defaulting settings.\n");
+void XynergySettings::setDefault(mINI::INIFile file, mINI::INIStructure ini) {
+	ini["scary_skeletons"].set({
+		{"debug", "0"}
+	});
+	ini["main_window"].set({
+		{"width", "1280"},
+		{"height", "720"},
+		{"windowmode", "0"}
+	});
+
 	debug = false;
 	width = 1280;
 	height = 720;
 	windowMode = Xynergy_WindowMode::XYNERGY_WINDOW;
+
+	if (file.write(ini)) {
+		printf("XynergySettings::setDefault: %s settings.ini was successfully created!\n", "\033[0;32mSuccess!\033[0;37m");
+	}
+	else {
+		printf("XynergySettings::setDefault: %s settings.ini could not be created! Is the syntax right?\n", "\033[0;31mError!\033[0;37m");
+	}
 }
 
-/// <summary>
-/// When Xynergy first starts up it tries to find the .ini file that contains the user's current settings.
-/// <para>If it fails to do so it sets them to default.</para>
-/// </summary>
 XynergySettings::XynergySettings() {
-	//TODO: if-statement if it finds the settings or not.
+	mINI::INIFile file("settings.ini");
+	mINI::INIStructure ini;
 
-	setDefault();
+	if (file.read(ini)) {
+		printf("XynergySettings: %s settings.ini found!\n", "\033[0;32mSuccess!\033[0;37m");
+		setExisting(file, ini);
+	}
+	else {
+		printf("XynergySettings: %s settings.ini was not found! Creating and defaulting settings.\n", "\033[0;33mWarning!\033[0;37m");
+		setDefault(file, ini);
+	}
+
+	file.~INIFile();
 }
 
-/// <summary>
-/// The XynergySettings' deconstructor runs when the game closes.
-/// <para>It simply takes all current settings and saves them to the settings.ini file.</para>
-/// </summary>
 XynergySettings::~XynergySettings() {
-	// First check if some genius decided to trash the file while the game was running.
+	mINI::INIFile file("settings.ini");
+	mINI::INIStructure ini;
+
+	// First check if some genius decided to trash the file while the game was running and call them out.
+	bool dumbdumb = false;
+
+	if (!file.read(ini)) {
+		printf("XynergySettings: %s Did you remove settings.ini? Why?\n", "\033[0;36mQuestion:\033[0;37m");
+		dumbdumb = true;
+	}
+
+	// TODO: actually saving the data...
+	int window = 0;
+	if (windowMode == Xynergy_WindowMode::XYNERGY_BORDERLESS) {
+		window = 1;
+	}
+	else if (windowMode == Xynergy_WindowMode::XYNERGY_FULLSCREEN) {
+		window = 2;
+	}
+
+	ini["scary_skeletons"].set({
+		{"debug", std::to_string(debug)}
+		});
+	ini["main_window"].set({
+		{"width", std::to_string(width)},
+		{"height", std::to_string(height)},
+		{"windowmode", std::to_string(window)}
+		});
+	
+	if (file.write(ini)) {
+		if (dumbdumb) {
+			printf("XynergySettings: %s settings.ini has been recreated. Can we just... not remove it in the future?\n", "\033[0;32mSuccess!\033[0;37m");
+		}
+		else {
+			printf("XynergySettings: %s Settings have been stored in settings.ini!\n", "\033[0;32mSuccess!\033[0;37m");
+		}
+	}
+	else {
+		printf("XynergySettings::setDefault: %s Couldn't write to settings.ini! Setings were not saved.\n", "\033[0;31mError!\033[0;37m");
+	}
+
+	file.~INIFile();
 }
