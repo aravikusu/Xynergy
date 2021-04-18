@@ -43,7 +43,7 @@ Dashboard::Dashboard() {
 }
 
 Dashboard::~Dashboard() {
-	printf("Dashboard is being killed!\n");
+	//printf("Dashboard is being killed!\n");
 	wallpaper.kill();
 	apps.clear();
 }

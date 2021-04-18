@@ -10,11 +10,6 @@
 
 class App {
 public:
-	/// <summary>
-	/// Initializes the app that you want to render.
-	/// </summary>
-	/// <param name="iconName">The name of your icon in the icon folder. Example: "icon.png"</param>
-	/// <param name="font">If the font is NULL it will default to Roboto. But try to send in a font as it's less efficient for the code to constantly create new ones.</param>
 	App();
 	~App();
 
