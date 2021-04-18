@@ -7,6 +7,7 @@
 #include <SDL_ttf.h>
 #include <Classes/Xynergy/xynergysettings.h>
 #include <Classes/GameState/Dashboard/dashboard.h>
+#include <Classes/Debug/debug.h>
 #include <Utils/enums.h>
 
 /// <summary> 
@@ -22,27 +23,38 @@ public:
 
 	// Initializes SDL and all of its components.
 	bool init();
+	void setSDLHints();
 
 	void changeGameState(Xynergy_GameState state);
 
 	// The main render function for the game loop.
 	// GameState determines where we go.
+
 	void loop();
 	void update();
 	void render();
 	void input();
-	void renderBoot();
-	void renderLogin();
+	void drawBoot();
+	void drawLogin();
 	void drawDashboard();
-	void renderSetup();
+	void drawSetup();
+
+	void toggleDebug();
+
+	/// <summary>
+	/// Renders debug-specific info to the screen.
+	/// </summary>
+	void drawDebug();
 private:
 	const char* windowName = "Xynergy";
 	SDL_Renderer* renderer;
 	SDL_Window* window;
 	bool running;
-	int frameCount, timerFPS, lastFrame;
+	int frameCount, timerFPS, lastFrame, fps;
 	Xynergy_GameState currentState;
 	Dashboard dashboard;
+
+	Debug debug;
 };
 
 #endif 
