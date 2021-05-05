@@ -57,7 +57,8 @@ void XynergySettings::setDefault(mINI::INIFile file, mINI::INIStructure ini) {
 	ini["main_window"].set({
 		{"width", "1280"},
 		{"height", "720"},
-		{"windowmode", "0"}
+		{"windowmode", "0"},
+		{"vsync", "0"}
 	});
 
 	debug = false;
