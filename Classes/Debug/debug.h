@@ -31,6 +31,7 @@ public:
 	void render(int fps, int windowWidth, int windowHeight, SDL_Renderer* ren);
 private:
 	bool isSetup;
+	int longestWidth;
 	TTF_Font* debugFont;
 	Texture nameTexture;
 	Texture versionFluffTexture;
