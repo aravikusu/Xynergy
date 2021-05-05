@@ -5,8 +5,10 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
-#include <Classes/Xynergy/xynergysettings.h>
+#include <Classes/Settings/xynergysettings.h>
+#include <Classes/Settings/usersettings.h>
 #include <Classes/GameState/Dashboard/dashboard.h>
+#include <Classes/GameState/Boot/boot.h>
 #include <Classes/Debug/debug.h>
 #include <Utils/enums.h>
 
@@ -26,6 +28,7 @@ public:
 	void setSDLHints();
 
 	void changeGameState(Xynergy_GameState state);
+	void clearGameState();
 
 	// The main render function for the game loop.
 	// GameState determines where we go.
@@ -50,10 +53,13 @@ private:
 	SDL_Renderer* renderer;
 	SDL_Window* window;
 	bool running;
-	int frameCount, timerFPS, lastFrame, fps;
+	Uint32 lastFrame;
+	int frameCount, timerFPS, fps;
+
 	Xynergy_GameState currentState;
 	Dashboard dashboard;
-
+	Boot boot;
+	UserSettings currentUser;
 	Debug debug;
 };
 

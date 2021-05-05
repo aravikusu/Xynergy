@@ -14,7 +14,7 @@ bool Xynergy::init() {
 		}
 		int width = settings.getWidth();
 		int height = settings.getHeight();
-		if (SDL_CreateWindowAndRenderer(width, height, SDL_RENDERER_ACCELERATED, &window, &renderer) < 0) {
+		if (SDL_CreateWindowAndRenderer(width, height, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC, &window, &renderer) < 0) {
 			printf("Xynergy::init: %s SDL_CreateWindowAndRenderer failure: %s\n", "\033[0;31mError!\033[0;37m", SDL_GetError());
 			success = false;
 		}
@@ -54,18 +54,39 @@ bool Xynergy::init() {
 }
 
 void Xynergy::changeGameState(Xynergy_GameState state) {
-	currentState = state;
+	if (currentState != state) {
+		clearGameState();
+		currentState = state;
 
-	switch (state)
+		switch (state)
+		{
+		case Xynergy_GameState::XYNERGY_BOOT:
+			boot.setupBoot(renderer);
+			break;
+		case Xynergy_GameState::XYNERGY_LOGIN:
+			break;
+		case Xynergy_GameState::XYNERGY_DASHBOARD:
+			dashboard.setupDashboard(renderer, currentUser);
+			break;
+		case Xynergy_GameState::XYNERGY_INITSETUP:
+			break;
+		}
+	}
+}
+
+void Xynergy::clearGameState() {
+	switch (currentState)
 	{
 	case Xynergy_GameState::XYNERGY_BOOT:
+		boot.clear();
 		break;
 	case Xynergy_GameState::XYNERGY_LOGIN:
 		break;
 	case Xynergy_GameState::XYNERGY_DASHBOARD:
-		dashboard.setupDashboard(renderer);
 		break;
 	case Xynergy_GameState::XYNERGY_INITSETUP:
+		break;
+	default:
 		break;
 	}
 }
@@ -83,7 +104,6 @@ void Xynergy::loop() {
 		render();
 		input();
 		update();
-
 	}
 }
 
@@ -94,10 +114,13 @@ void Xynergy::loop() {
 void Xynergy::render() {
 	SDL_RenderClear(renderer);
 
+	// There's more detailed descriptions of each gamestate in their class.
 	switch (currentState) {
 	case Xynergy_GameState::XYNERGY_BOOT:
+		drawBoot();
 		break;
 	case Xynergy_GameState::XYNERGY_LOGIN:
+		drawLogin();
 		break;
 	case Xynergy_GameState::XYNERGY_DASHBOARD:
 		drawDashboard();
@@ -106,18 +129,27 @@ void Xynergy::render() {
 		break;
 	}
 
-	frameCount++;
-	timerFPS = SDL_GetTicks() - lastFrame;
-	/*if (timerFPS < (1000 / 60)) {
-		SDL_Delay((1000 / 60) - timerFPS);
-	}*/
-
 	bool debugMode = settings.getDebug();
 	if (debugMode) {
 		drawDebug();
 	}
 
+	frameCount++;
+	timerFPS = SDL_GetTicks() - lastFrame;
+
+	if (timerFPS < (1000 / 60)) {
+		SDL_Delay((1000 / 60) - timerFPS);
+	}
+
 	SDL_RenderPresent(renderer);
+}
+
+void Xynergy::drawBoot() {
+	boot.renderBootAnimation(renderer, settings.getWidth(), settings.getHeight());
+}
+
+void Xynergy::drawLogin() {
+
 }
 
 void Xynergy::drawDashboard() {
@@ -146,6 +178,12 @@ void Xynergy::input() {
 		if (e.type == SDL_QUIT) running = false;
 	}
 
+	if (currentState == Xynergy_GameState::XYNERGY_BOOT) {
+		if (keystates[SDL_SCANCODE_ESCAPE] || keystates[SDL_SCANCODE_KP_ENTER] || keystates[SDL_SCANCODE_SPACE]) {
+			changeGameState(Xynergy_GameState::XYNERGY_LOGIN);
+		}
+	}
+
 	if (keystates[SDL_SCANCODE_C] && SDL_GetModState() && KMOD_CTRL) {
 		SDL_SetClipboardText("");
 	}
@@ -164,8 +202,9 @@ Xynergy::Xynergy() {
 	}
 	else {
 		running = true;
-		changeGameState(Xynergy_GameState::XYNERGY_DASHBOARD);
+		changeGameState(Xynergy_GameState::XYNERGY_BOOT);
 		toggleDebug();
+
 		loop();
 	}
 }
