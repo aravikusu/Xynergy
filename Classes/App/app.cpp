@@ -34,11 +34,11 @@ void App::setupApp(std::string iconName, std::string appName, SDL_Color textColo
 	// This is more of a failsafe. Do not rely on this.
 	if (font == NULL) {
 		font = TTF_OpenFont("Materials/fonts/Roboto-Regular.ttf", 18);
-		name.loadText(appName, textColor, font, 16, ren);
+		name.loadText(appName, textColor, font, 16, ren, false, 30);
 		TTF_CloseFont(font);
 	}
 	else {
-		name.loadText(appName, textColor, font, 16, ren);
+		name.loadText(appName, textColor, font, 16, ren, false, 30);
 	}
 }
 
