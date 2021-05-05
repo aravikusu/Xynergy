@@ -69,7 +69,7 @@ enum class Xynergy_TaskbarMode {
 /// Determines on what side of the screen your taskbar will appear.
 /// <para>Note that this setting is ignored if your taskbar uses XYNERGY_TASKBAR_X.</para>
 /// </summary>
-enum class Xynergy_TaskBarOrientation {
+enum class Xynergy_TaskbarOrientation {
 	XYNERGY_TASKBAR_TOP = 0,
 	XYNERGY_TASKBAR_RIGHT = 1,
 	XYNERGY_TASKBAR_BOTTOM = 2,
