@@ -4,18 +4,22 @@
 #include <string>
 #include <vector>
 #include <SDL.h>
+#include <Classes/Settings/usersettings.h>
 #include <Classes/GameState/Dashboard/taskbar.h>
 #include <Classes/App/app.h>
 #include <Classes/Texture/texture.h>
 
-
+/// <summary>
+/// The biggest and most complex game state.
+/// <para>The main game takes place here.</para>
+/// </summary>
 class Dashboard {
 public:
 	Dashboard();
 	~Dashboard();
 
 	// Called by Xynergy::render() when the game state changes into Dashboard.
-	void setupDashboard(SDL_Renderer* ren);
+	void setupDashboard(SDL_Renderer* ren, UserSettings currentUser);
 
 	// Renders the entire dashboard.
 	void renderDashboard(SDL_Renderer* ren, int width, int height);

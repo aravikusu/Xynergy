@@ -30,10 +30,10 @@ void Dashboard::renderDashboard(SDL_Renderer* ren, int width, int height) {
 	taskbar.renderTaskbar(ren, width, height);
 }
 
-void Dashboard::setupDashboard(SDL_Renderer* ren) {
+void Dashboard::setupDashboard(SDL_Renderer* ren, UserSettings currentUser) {
 	printf("Dashboard is being set up.\n");
-	wallpaper.loadFile("Materials/textures/wallpapers/xynergy-b.png", ren);
-	taskbar.setupTaskbar(ren);
+	wallpaper.loadFile("Materials/textures/wallpapers/" + currentUser.currentWallpaper, ren);
+	taskbar.setupTaskbar(ren, currentUser);
 	appListSetup(ren);
 }
 
