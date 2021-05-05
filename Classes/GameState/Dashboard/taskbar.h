@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include <SDL.h>
+#include <Classes/Settings/usersettings.h>
 #include <Classes/App/app.h>
 #include <Classes/Texture/texture.h>
 #include <Utils/enums.h>
@@ -19,7 +20,7 @@ public:
 
 	// This function is called immediately by the Dashboard.
 	// Defaults values if no UserSettings can be found.
-	void setupTaskbar(SDL_Renderer* ren);
+	void setupTaskbar(SDL_Renderer* ren, UserSettings currentUser);
 
 	// Renders the Taskbar based on the mode/orientation.
 	void renderTaskbar(SDL_Renderer* ren, int windowWidth, int windowHeight);
@@ -27,6 +28,7 @@ private:
 	Texture taskbarTexture;
 	Texture button;
 	int height;
+	int width;
 
 	// Determines If you want to have a Windows/OSX/Custom-themed taskbar.
 	// Has to be manually set.
@@ -34,7 +36,7 @@ private:
 
 	// Where your taskbar will be rendered.
 	// NOTE: will be ignored if TaskbarMode XYNERGY_TASKBAR_X is used.
-	Xynergy_TaskBarOrientation orientation;
+	Xynergy_TaskbarOrientation orientation;
 };
 
 #endif
