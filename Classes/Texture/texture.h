@@ -20,13 +20,19 @@ public:
 	bool loadFile(std::string path, SDL_Renderer* ren);
 
 	//Creates a texture based on the font and text sent in.
-	bool loadText(std::string text, SDL_Color textColor, TTF_Font* font, int fontSize, SDL_Renderer* ren);
+	bool loadText(std::string text, SDL_Color textColor, TTF_Font* font, int fontSize, SDL_Renderer* ren, bool wrap = false, Uint32 wrapLength = 45);
 
-	// Simply renders your texture at the coordinates you shoot in.
-	void render(int x, int y, SDL_Renderer* ren, SDL_Rect* clip = NULL);
-
-	// Render a texture while setting a specific viewport for it.
-	void renderViewport(SDL_Renderer* ren, SDL_Rect* viewport);
+	/// <summary>
+	/// The main render function. It's big, so makes sure you know how it works.
+	/// </summary>
+	/// <param name="x, y">The coordinates where you want to place your texture.</param>
+	/// <param name="ren">The renderer.</param>
+	/// <param name="clip">If you use a spritesheet you use this Rect to tell the function what to render.</param>
+	/// <param name="viewport">If this isn't null your texture will be rendered in its own viewport.</param>
+	/// <param name="angle">Rotate your texture a certain amount of degrees.</param>
+	/// <param name="center"></param>
+	/// <param name="flip">Vertifal, horizontal, or no flip.</param>
+	void render(int x, int y, SDL_Renderer* ren, SDL_Rect* clip = NULL, SDL_Rect* viewport = NULL, double angle= 0.0, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 	// Free texture from memory.
 	void kill();
