@@ -24,14 +24,16 @@ enum class Xynergy_SettingsType {
 /// <summary>
 /// Xynergy_GameState determines which screen we're currently rendering.
 ///</summary>
+/// <param name="XYNERGY_START">Just the default value. It does nothing and is the initial value that immediately changes on-boot.</param>
 /// <param name="XYNERGY_BOOT">The initial boot-up sequence. Game always starts here.</param>
 /// <param name="XYNERGY_LOGIN">The login screen. Can be toggled to always show or not in XynergySettings.</param>
 /// <param name="XYNERGY_DASHBOARD">The dashboard, or desktop, if you will. The main game takes place here.</param>
 /// <param name="XYNERGY_INITSETUP">The first-time installation. Only runs once.</param>
 enum class Xynergy_GameState {
-	XYNERGY_BOOT = 0,
-	XYNERGY_LOGIN = 1,
-	XYNERGY_DASHBOARD = 2,
+	XYNERGY_START = 0,
+	XYNERGY_BOOT = 1,
+	XYNERGY_LOGIN = 2,
+	XYNERGY_DASHBOARD = 3,
 	XYNERGY_INITSETUP = 99
 };
 
