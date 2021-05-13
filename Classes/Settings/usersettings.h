@@ -3,9 +3,11 @@
 
 #define MINI_CASE_SENSITIVE
 #include <string>
+#include <iostream>
 #include <Utils/libs/ini.h>
 #include <SDL.h>
 #include <Utils/enums.h>
+#include <Utils/xynergyhelper.h>
 #include <Utils/libs/ini.h>
 
 /// <summary>
@@ -28,9 +30,6 @@ public:
 	/// Clears out all current settings in memory.
 	/// </summary>
 	void clearSettings();
-
-	std::string TaskbarOrientationToString(Xynergy_TaskbarOrientation orientation);
-	Xynergy_TaskbarOrientation stringToTaskbarOrientation(std::string orientation);
 
 	std::string name;
 	std::string displayName;
