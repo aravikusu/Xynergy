@@ -166,7 +166,7 @@ void Boot::animationPart2(SDL_Renderer* ren, int windowWidth, int windowHeight) 
 		}
 	}
 
-	logo.render((windowWidth / 2) - 100, (windowHeight / 2) - logo.getHeight(), ren);
+	logo.render((windowWidth - logo.getWidth()) / 2, (windowHeight - logo.getHeight()) / 2, ren);
 }
 
 void Boot::clear() {
@@ -183,6 +183,15 @@ void Boot::clear() {
 	ramIncrementer = 0;
 	alphaIncrementer = 0;
 	logoAppeared = 0;
+}
+
+void Boot::handleEvents(SDL_Event e) {
+	switch (e.key.keysym.sym) {
+	case SDLK_ESCAPE:
+	case SDLK_SPACE:
+	case SDLK_RETURN:
+		bootComplete = true;
+	}
 }
 
 Boot::Boot() {

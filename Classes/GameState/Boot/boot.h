@@ -37,6 +37,8 @@ public:
 	void animationPart2(SDL_Renderer* ren, int windowWidth, int windowHeight);
 	void clear();
 
+	void handleEvents(SDL_Event e);
+
 	bool bootComplete;
 private:
 	std::string wmiQuery(const char* query);
