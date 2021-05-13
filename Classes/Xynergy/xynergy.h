@@ -9,8 +9,10 @@
 #include <Classes/Settings/usersettings.h>
 #include <Classes/GameState/Dashboard/dashboard.h>
 #include <Classes/GameState/Boot/boot.h>
+#include <Classes/GameState/Login/login.h>
 #include <Classes/Debug/debug.h>
 #include <Utils/enums.h>
+#include <Utils/xynergyhelper.h>
 
 /// <summary> 
 /// The main Xynergy class. It handles everything related to the game loop and window.
@@ -56,11 +58,12 @@ private:
 	Uint32 lastFrame;
 	int frameCount, timerFPS, fps;
 
-	Xynergy_GameState currentState;
+	Xynergy_GameState currentState = Xynergy_GameState::XYNERGY_START;
 	Dashboard dashboard;
 	Boot boot;
 	UserSettings currentUser;
 	Debug debug;
+	Login login;
 };
 
 #endif 

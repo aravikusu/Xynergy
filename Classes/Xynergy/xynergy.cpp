@@ -5,17 +5,18 @@ bool Xynergy::init() {
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		printf("Xynergy::init: %s SDL_Init failure: %s\n", "\033[0;31mError!\033[0;37m", SDL_GetError());
+		std::cout << "Xynergy::init:" << XynergyHelper::console::error() << "SDL_Init failure:" << SDL_GetError() << "\n";
 		success = false;
 	}
 	else {
 
 		if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2")) {
-			printf("Xynergy::init: %s Linear texture filtering could not be enabled!", "\033[0;33mWarning!\033[0;37m");
+			std::cout << "Xynergy::init:" << XynergyHelper::console::warning() << "Linear texture filtering could not be enabled!\n";
 		}
 		int width = settings.getWidth();
 		int height = settings.getHeight();
 		if (SDL_CreateWindowAndRenderer(width, height, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC, &window, &renderer) < 0) {
-			printf("Xynergy::init: %s SDL_CreateWindowAndRenderer failure: %s\n", "\033[0;31mError!\033[0;37m", SDL_GetError());
+			std::cout << "Xynergy::init:" << XynergyHelper::console::error() << "SDL_CreateWindowAndRenderer failure: " << SDL_GetError();
 			success = false;
 		}
 		else {
@@ -23,12 +24,12 @@ bool Xynergy::init() {
 
 			int imgFlags = IMG_INIT_JPG | IMG_INIT_PNG;
 			if (!(IMG_Init(imgFlags) & imgFlags)) {
-				printf("Xynergy::init: %s IMG_init failure: %s\n", "\033[0;31mError!\033[0;37m", IMG_GetError());
+				std::cout << "Xynergy::init:" << XynergyHelper::console::error() << "IMG_init failure: " << IMG_GetError() << "\n";
 				success = false;
 			}
 
 			if (TTF_Init() == -1) {
-				printf("Xynergy::init: %s TTF_Init failure: %s\n", "\033[0;31mError!\033[0;37m", TTF_GetError());
+				std::cout << "Xynergy::init:" << XynergyHelper::console::error() << "TTF_Init failure: " << TTF_GetError() << "\n";
 				success = false;
 			}
 
@@ -55,6 +56,7 @@ bool Xynergy::init() {
 
 void Xynergy::changeGameState(Xynergy_GameState state) {
 	if (currentState != state) {
+		std::cout << "Xynergy::changeGameState:" << XynergyHelper::console::alert() << "GameState is updating to " << XynergyHelper::enum_converter::xynergyGameStateToString(state) << "!\n";
 		clearGameState();
 		currentState = state;
 
@@ -64,6 +66,7 @@ void Xynergy::changeGameState(Xynergy_GameState state) {
 			boot.setupBoot(renderer);
 			break;
 		case Xynergy_GameState::XYNERGY_LOGIN:
+			login.setupLogin(renderer, settings.getLastTheme());
 			break;
 		case Xynergy_GameState::XYNERGY_DASHBOARD:
 			dashboard.setupDashboard(renderer, currentUser);
@@ -81,6 +84,7 @@ void Xynergy::clearGameState() {
 		boot.clear();
 		break;
 	case Xynergy_GameState::XYNERGY_LOGIN:
+		login.clear();
 		break;
 	case Xynergy_GameState::XYNERGY_DASHBOARD:
 		break;
@@ -145,11 +149,28 @@ void Xynergy::render() {
 }
 
 void Xynergy::drawBoot() {
-	boot.renderBootAnimation(renderer, settings.getWidth(), settings.getHeight());
+	if (!boot.bootComplete) {
+		boot.renderBootAnimation(renderer, settings.getWidth(), settings.getHeight());
+	}
+	else {
+		changeGameState(Xynergy_GameState::XYNERGY_LOGIN);
+	}
 }
 
 void Xynergy::drawLogin() {
+	if (!login.loginComplete) {
+		int width = settings.getWidth();
+		int height = settings.getHeight();
+		std::string lastTheme = settings.getLastTheme();
+		login.renderLogin(renderer, height, width, lastTheme);
 
+		if (login.authedUser != "" && currentUser.name == "") {
+			currentUser.readUserSettings(login.authedUser);
+		}
+	}
+	else {
+		changeGameState(Xynergy_GameState::XYNERGY_DASHBOARD);
+	}
 }
 
 void Xynergy::drawDashboard() {
@@ -174,13 +195,22 @@ void Xynergy::toggleDebug() {
 void Xynergy::input() {
 	SDL_Event e;
 	const Uint8* keystates = SDL_GetKeyboardState(NULL);
+
 	while (SDL_PollEvent(&e)) {
 		if (e.type == SDL_QUIT) running = false;
-	}
 
-	if (currentState == Xynergy_GameState::XYNERGY_BOOT) {
-		if (keystates[SDL_SCANCODE_ESCAPE] || keystates[SDL_SCANCODE_KP_ENTER] || keystates[SDL_SCANCODE_SPACE]) {
-			changeGameState(Xynergy_GameState::XYNERGY_LOGIN);
+		switch (currentState)
+		{
+		case Xynergy_GameState::XYNERGY_BOOT:
+			boot.handleEvents(e);
+			break;
+		case Xynergy_GameState::XYNERGY_LOGIN:
+			login.handleEvents(e);
+			break;
+		case Xynergy_GameState::XYNERGY_DASHBOARD:
+			break;
+		case Xynergy_GameState::XYNERGY_INITSETUP:
+			break;
 		}
 	}
 
@@ -198,7 +228,7 @@ void Xynergy::update() {
 
 Xynergy::Xynergy() {
 	if (!init()) {
-		printf("\033[0;31mInitialization failure!\033[0;37m \n\nCheck the console for further errors that lead here.\n");
+		std::cout << "\033[0;31mInitialization failure!\033[0;37m \n\nCheck the console for further errors that lead here.\n";
 	}
 	else {
 		running = true;
@@ -210,7 +240,7 @@ Xynergy::Xynergy() {
 }
 
 Xynergy::~Xynergy() {
-	printf("\033[0;35mXynergy\033[0;37m is shutting down.\n");
+	std::cout << "\033[0;35mXynergy\033[0;37m is shutting down.\n";
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
