@@ -31,7 +31,6 @@ void Dashboard::renderDashboard(SDL_Renderer* ren, int width, int height) {
 }
 
 void Dashboard::setupDashboard(SDL_Renderer* ren, UserSettings currentUser) {
-	printf("Dashboard is being set up.\n");
 	wallpaper.loadFile("Materials/textures/wallpapers/" + currentUser.currentWallpaper, ren);
 	taskbar.setupTaskbar(ren, currentUser);
 	appListSetup(ren);
@@ -43,7 +42,6 @@ Dashboard::Dashboard() {
 }
 
 Dashboard::~Dashboard() {
-	//printf("Dashboard is being killed!\n");
 	wallpaper.kill();
 	apps.clear();
 }

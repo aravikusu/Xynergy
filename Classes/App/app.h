@@ -8,6 +8,11 @@
 #include <Utils/enums.h>
 #include <Classes/Texture/texture.h>
 
+/// <summary>
+/// App serves a double-purpose.
+/// <para>The main one being a more advanced Button class that shows up as an icon on the Dashboard,</para>
+/// <para>the other being a list in the Taskbar.</para>
+/// </summary>
 class App {
 public:
 	App();

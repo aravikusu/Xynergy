@@ -8,13 +8,13 @@ bool Texture::loadFile(std::string path, SDL_Renderer* ren) {
 	SDL_Surface* surface = IMG_Load(path.c_str());
 
 	if (surface == NULL) {
-		printf("Texture::loadFile: %s Unable to load %s! SDL_Image error: %s\n", "\033[0;31mError!\033[0;37m", path.c_str(), IMG_GetError());
+		std::cout << "Texture::loadFile: " << XynergyHelper::console::error() << " unable to load " << path << "! SDL_Image error: " << IMG_GetError() << "\n";
 	}
 	else {
 		newTexture = SDL_CreateTextureFromSurface(ren, surface);
 
 		if (newTexture == NULL) {
-			printf("Texture::loadFile: %s Unable to create texture from %s! SDL error: %s\n", "\033[0;31mError!\033[0;37m", path.c_str(), SDL_GetError());
+			std::cout << "Texture::loadFile: " << XynergyHelper::console::error() << " unable to create texture from " << path << "! SDL error: " << SDL_GetError() << "\n";
 		}
 		else {
 			width = surface->w;
@@ -40,13 +40,13 @@ bool Texture::loadText(std::string text, SDL_Color textColor, TTF_Font* font, in
 	}
 
 	if (surface == NULL) {
-		printf("Texture::loadText: %s Unable to render text! SDL_TTF error: %s\n", "\033[0;31mError!\033[0;37m", TTF_GetError());
+		std::cout << "Texture::loadText: " << XynergyHelper::console::error() << " unable to render text! SDL_TTF error: " << TTF_GetError() << "\n";
 	}
 	else {
 		texture = SDL_CreateTextureFromSurface(ren, surface);
 
 		if (texture == NULL) {
-			printf("Texture::loadText: %s Unable to create texture from text! SDL error: %s\n", "\033[0;31mError!\033[0;37m", SDL_GetError());
+			std::cout << "Texture::loadText: " << XynergyHelper::console::error() << " unable to create texture from text! SDL error: " << SDL_GetError() << "\n";
 		}
 		else {
 			width = surface->w;

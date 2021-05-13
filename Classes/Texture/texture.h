@@ -2,9 +2,11 @@
 #define TEXTURE_H
 
 #include <string>
+#include <iostream>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <Utils/xynergyhelper.h>
 
 /// <summary>
 /// The class name is pretty self-explanatory.
