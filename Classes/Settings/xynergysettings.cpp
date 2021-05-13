@@ -16,6 +16,10 @@ Xynergy_WindowMode XynergySettings::getWindowMode() {
 	return windowMode;
 }
 
+std::string XynergySettings::getLastTheme() {
+	return lastTheme;
+}
+
 
 template<typename T>
 bool XynergySettings::saveSetting(Xynergy_SettingsType type, T value) {
@@ -39,6 +43,7 @@ void XynergySettings::setExisting(mINI::INIFile file, mINI::INIStructure ini) {
 	std::istringstream(ini.get("scary_skeletons").get("debug")) >> debug;
 	width = std::stoi(ini.get("main_window").get("width"));
 	height = std::stoi(ini.get("main_window").get("height"));
+	lastTheme = (ini.get("looks").get("lasttheme"));
 
 	int window = std::stoi(ini.get("main_window").get("windowmode"));
 
@@ -58,7 +63,9 @@ void XynergySettings::setDefault(mINI::INIFile file, mINI::INIStructure ini) {
 		{"width", "1280"},
 		{"height", "720"},
 		{"windowmode", "0"},
-		{"vsync", "0"}
+	});
+	ini["looks"].set({
+		{"lasttheme", "plum"}
 	});
 
 	debug = false;
@@ -67,10 +74,10 @@ void XynergySettings::setDefault(mINI::INIFile file, mINI::INIStructure ini) {
 	windowMode = Xynergy_WindowMode::XYNERGY_WINDOW;
 
 	if (file.write(ini)) {
-		printf("XynergySettings::setDefault: %s settings.ini was successfully created!\n", "\033[0;32mSuccess!\033[0;37m");
+		std::cout << "XynergySettings::setDefault:" << XynergyHelper::console::success() << "settings.ini was successfully created!\n";
 	}
 	else {
-		printf("XynergySettings::setDefault: %s settings.ini could not be created! Is the syntax right?\n", "\033[0;31mError!\033[0;37m");
+		std::cout << "XynergySettings::setDefault:" << XynergyHelper::console::error() << "settings.ini could not be created!\n";
 	}
 }
 
@@ -79,11 +86,11 @@ XynergySettings::XynergySettings() {
 	mINI::INIStructure ini;
 
 	if (file.read(ini)) {
-		printf("XynergySettings: %s settings.ini found!\n", "\033[0;32mSuccess!\033[0;37m");
+		std::cout << "XynergySettings:" << XynergyHelper::console::success() << "settings.ini was found!\n";
 		setExisting(file, ini);
 	}
 	else {
-		printf("XynergySettings: %s settings.ini was not found! Creating and defaulting settings.\n", "\033[0;33mWarning!\033[0;37m");
+		std::cout << "XynergySettings::setDefault:" << XynergyHelper::console::warning() << "settings.ini was not found! Creating and default settings.\n";
 		setDefault(file, ini);
 	}
 
@@ -98,11 +105,11 @@ XynergySettings::~XynergySettings() {
 	bool dumbdumb = false;
 
 	if (!file.read(ini)) {
-		printf("XynergySettings: %s Did you remove settings.ini? Why?\n", "\033[0;36mQuestion:\033[0;37m");
+		std::cout << "XynergySettings:" << XynergyHelper::console::question() << "Did you remove settings.ini? Why?\n";
+
 		dumbdumb = true;
 	}
 
-	// TODO: actually saving the data...
 	int window = 0;
 	if (windowMode == Xynergy_WindowMode::XYNERGY_BORDERLESS) {
 		window = 1;
@@ -119,17 +126,20 @@ XynergySettings::~XynergySettings() {
 		{"height", std::to_string(height)},
 		{"windowmode", std::to_string(window)}
 		});
+	ini["looks"].set({
+		{"lasttheme", lastTheme}
+		});
 	
 	if (file.write(ini)) {
 		if (dumbdumb) {
-			printf("XynergySettings: %s settings.ini has been recreated. Can we just... not remove it in the future?\n", "\033[0;32mSuccess!\033[0;37m");
+			std::cout << "XynergySettings:" << XynergyHelper::console::success() << "settings.ini has been recreated. Can we just... not remove it in the future?\n";
 		}
 		else {
-			printf("XynergySettings: %s Settings have been stored in settings.ini!\n", "\033[0;32mSuccess!\033[0;37m");
+			std::cout << "XynergySettings:" << XynergyHelper::console::success() << "Settings have been stored in settings.ini!\n";
 		}
 	}
 	else {
-		printf("XynergySettings::setDefault: %s Couldn't write to settings.ini! Setings were not saved.\n", "\033[0;31mError!\033[0;37m");
+		std::cout << "XynergySettings:" << XynergyHelper::console::error() << "Couldn't write to settings.ini! Settings were not saved.\n";
 	}
 
 	file.~INIFile();

@@ -2,9 +2,11 @@
 #define XYNERGYSETTINGS_H
 
 #include <string>
+#include <iostream>
 #include <Utils/enums.h>
 #include <type_traits>
 #include <Utils/libs/ini.h>
+#include <Utils/xynergyhelper.h>
 
 /// <summary>
 /// XynergySettings is meant to handle settings for the game itself, such as window mode and size, not user data.
@@ -37,6 +39,7 @@ public:
 	int getWidth();
 	int getHeight();
 	Xynergy_WindowMode getWindowMode();
+	std::string getLastTheme();
 private:
 	/// <summary>
 	/// Runs if settings.ini wasn't found. Simply creates it and defaults settings.
@@ -51,6 +54,7 @@ private:
 	bool debug;
 	int width, height;
 	Xynergy_WindowMode windowMode;
+	std::string lastTheme;
 };
 
 #endif
