@@ -9,9 +9,9 @@
 #include <Classes/Texture/texture.h>
 
 /// <summary>
-/// App serves a double-purpose.
-/// <para>The main one being a more advanced Button class that shows up as an icon on the Dashboard,</para>
-/// <para>the other being a list in the Taskbar.</para>
+/// App is one of the more complex classes.
+/// <para>It's main purpose is to show up on the Dashboard as a DashboardIcon,</para>
+/// <para>the other being as a AppTrayItem/AppListItem.</para>
 /// </summary>
 class App {
 public:
