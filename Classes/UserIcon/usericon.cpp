@@ -35,35 +35,9 @@ void UserIcon::render(SDL_Renderer* ren) {
 	nameTexture.render(((iconTexture.getWidth() - nameTexture.getWidth()) / 2) + coordinates.x, (coordinates.y + 115), ren);
 }
 
-bool UserIcon::checkInside(int eventX, int eventY) {
-	bool inside = true;
-
-	if (eventX < coordinates.x)
-	{
-		inside = false;
-	}
-	//Mouse is right of the button
-	else if (eventX > coordinates.x + iconTexture.getWidth())
-	{
-		inside = false;
-	}
-	//Mouse above the button
-	else if (eventY < coordinates.y)
-	{
-		inside = false;
-	}
-	//Mouse below the button
-	else if (eventY > coordinates.y + iconTexture.getHeight())
-	{
-		inside = false;
-	}
-
-	return inside;
-}
-
 void UserIcon::handleMotionEvent(SDL_MouseMotionEvent& e) {
 	if (e.type == SDL_MOUSEMOTION) {
-		bool inside = checkInside(e.x, e.y);
+		bool inside = XynergyHelper::event_helper::checkInside(e.x, e.y, iconTexture.getWidth(), iconTexture.getHeight(), coordinates);
 
 		if (inside) {
 			iconTexture.setAlpha(255);
@@ -78,7 +52,7 @@ void UserIcon::handleMotionEvent(SDL_MouseMotionEvent& e) {
 
 void UserIcon::handleClickEvent(SDL_MouseButtonEvent& e) {
 	if (e.button == SDL_BUTTON_LEFT) {
-		bool inside = checkInside(e.x, e.y);
+		bool inside = XynergyHelper::event_helper::checkInside(e.x, e.y, iconTexture.getWidth(), iconTexture.getHeight(), coordinates);
 
 		if (inside) {
 			selected = true;

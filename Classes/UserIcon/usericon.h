@@ -6,6 +6,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <Classes/Texture/texture.h>
+#include <Utils/xynergyhelper.h>
 
 /// <summary>
 /// Works as a button. Used on the Login screen and in a few places across the Dashboard.
@@ -27,7 +28,6 @@ public:
 
 	bool selected;
 private:
-	bool checkInside(int eventX, int eventY);
 
 	// This is mostly here for compatability during login.
 	std::string username;

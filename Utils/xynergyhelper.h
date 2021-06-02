@@ -2,12 +2,41 @@
 #define XYNERGYHELPER_H
 
 #include <string>
+#include <SDL.h>
 #include "enums.h"
 
 /// <summary>
 /// Helper functions. From enum conversions to console colors.
 /// </summary>
 namespace XynergyHelper {
+
+	namespace event_helper {
+		inline bool checkInside(int eventX, int eventY, int iconWidth, int iconHeight, SDL_Point coordinates) {
+			bool inside = true;
+
+			if (eventX < coordinates.x)
+			{
+				inside = false;
+			}
+			//Mouse is right of the button
+			else if (eventX > coordinates.x + iconWidth)
+			{
+				inside = false;
+			}
+			//Mouse above the button
+			else if (eventY < coordinates.y)
+			{
+				inside = false;
+			}
+			//Mouse below the button
+			else if (eventY > coordinates.y + iconHeight)
+			{
+				inside = false;
+			}
+
+			return inside;
+		}
+	}
 
 	/// <summary>
 	/// Need a Xynergy enum to be a string or vice versa? Use these.
