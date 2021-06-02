@@ -7,6 +7,7 @@
 #include <Classes/Settings/usersettings.h>
 #include <Classes/GameState/Dashboard/taskbar.h>
 #include <Classes/App/app.h>
+#include <Classes/GameState/Dashboard/dashboardicon.h>
 #include <Classes/Texture/texture.h>
 
 /// <summary>
@@ -23,10 +24,12 @@ public:
 
 	// Renders the entire dashboard.
 	void renderDashboard(SDL_Renderer* ren, int width, int height);
+
+	void handleEvents(SDL_Event e);
 private:
 	Texture wallpaper;
 	Taskbar taskbar;
-	std::vector<App> apps;
+	std::vector<DashboardIcon> icons;
 
 	//Set up all the apps you wish to render to the Dashboard here.
 	void appListSetup(SDL_Renderer* ren);
