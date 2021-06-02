@@ -10,49 +10,30 @@
 
 /// <summary>
 /// App is one of the more complex classes.
-/// <para>It's main purpose is to show up on the Dashboard as a DashboardIcon,</para>
-/// <para>the other being as a AppTrayItem/AppListItem.</para>
+/// <para>It deals with all logic relating to apps - what to render, expected logic, etc.</para>
+/// <para>It's used as a component in DashboardIcon, TaskbarTrayItem, and TaskbarListItem.</para>
 /// </summary>
 class App {
 public:
 	App();
-	~App();
 
 	/// <summary>
 	/// Create your app. Show it some love.
 	/// </summary>
-	/// <param name="iconName">The name of your icon in the icon folder. Example: "icon.png"</param>
-	/// <param name="font">If the font is NULL it will default to Roboto. But try to send in a font as it's less efficient for the code to constantly create new ones.</param>
-	void setupApp(std::string iconName, std::string appName, SDL_Color textColor,
-		TTF_Font* font, SDL_Renderer* ren);
+	/// <param name="name">Simply the display name to be used everywhere for the app.</param>
+	/// <param name="appType">The wanted behavior when the app is launched.</param>
+	/// <param name="description">Optional flavor text for your app. Shown in the AppList in the Finder.</param>
+	void setupApp(std::string appName, Xynergy_AppType type, std::string appDescription = "");
 
-	void render(SDL_Renderer* ren);
-
-	/// <summary>
-	/// Determines the expected logic when you click on it.
-	/// </summary>
-	void setAppType(Xynergy_AppType type);
-
-	/// <summary>
-	/// The app defaults to show. Use this if you want to hide/show an app.
-	/// </summary>
-	void toggleShow();
-
-	void setCoordinates(int x, int y);
+	std::string getName();
+	std::string getDescription();
+	Xynergy_AppType getAppType();
 private:
-	// The icon. Use the Texture::loadImage() function.
-	Texture icon;
-
-	// The name. Use the Texture::loadText() function.
-	Texture name;
+	std::string name;
+	std::string description;
 
 	// Determines the expected logic when you click on it.
 	Xynergy_AppType appType;
-
-	// If false it won't appear on the dashboard.
-	// Coordinates will also be ignored.
-	bool showOnDashboard = true;
-	int appX, appY;
 };
 
 #endif
